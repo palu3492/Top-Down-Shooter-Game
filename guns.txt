@@ -1,0 +1,3 @@
+start with pistol (and knife)
+can buy shotgun and ausult rifle  (then can reload off that item wall plate)
+if you buy one it will replace current gun unless you only have one gun
