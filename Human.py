@@ -7,10 +7,9 @@ class Human(pygame.sprite.Sprite):
     current_move = 0
     current_shoot = 0
 
-    health = 100.00
+    player_cash = 0
 
-    stun_timer=200
-    human_speed=20
+    health = 100.00
 
     player = (type + "/survivor-" + type + "_rifle_" + str(0) + ".png")
 
@@ -58,6 +57,7 @@ class Human(pygame.sprite.Sprite):
 
         self.image = pygame.image.load(self.player)
         self.image = pygame.transform.scale(self.image, (int(self.image.get_rect().size[0] * .5),int(self.image.get_rect().size[1] * .5)))
+        self.health_regen()
 
     def remove_health(self, damage):
         self.health -= damage
@@ -75,18 +75,10 @@ class Human(pygame.sprite.Sprite):
         else:
             return 0
 
-    def get_speed(self):
-        return self.human_speed
+    def health_regen(self):
+        if self.health < 100:
+            self.health += .05
 
-    def remove_speed(self, stun_amount):
-        self.human_speed = stun_amount
-        self.stun_timer=200
-
-    def human_speed_timer(self):
-        if self.stun_timer>0:
-            self.stun_timer-=1
-        else:
-            self.human_speed=20
 
 
 

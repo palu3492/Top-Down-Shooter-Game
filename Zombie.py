@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from Data import *
 
 class Zombie(pygame.sprite.Sprite):
     zombieX = zombieY = 0
@@ -8,13 +9,12 @@ class Zombie(pygame.sprite.Sprite):
     current_idle, current_move, current_attack = 0,0,0
     zombie_speed=6
     stun_timer=0
-    zombie_attack_timer=0
 
     player = ("zombie_" + type + "/skeleton-" + type + "_" + str(0) + ".png")
     zombie_health = 100.00
 
     def __init__(self, window_size, cash):
-        self.player_cash=cash
+        self.player_cash = cash
         pygame.sprite.Sprite.__init__(self)
         self.window_size=window_size
         self.image = pygame.image.load("zombie_idle/skeleton-idle_0.png").convert_alpha()
@@ -73,6 +73,12 @@ class Zombie(pygame.sprite.Sprite):
         self.zombieY = Y
         self.zombieX = X
 
+    def move_Y_pos(self, Y):
+        self.rect.y += Y
+
+    def move_X_pos(self, X):
+        self.rect.x += X
+
     def reset_posistion(self):
         self.spawn_zombie()
 
@@ -116,14 +122,6 @@ class Zombie(pygame.sprite.Sprite):
             self.stun_timer-=1
         else:
             self.zombie_speed=6
-
-    def is_zombie_attacking(human, zombie):
-        pygame.sprite.collide_rect_ratio(.5)
-        if pygame.sprite.collide_rect(human, zombie):
-            # zombie.update_anim("ATTACK")
-            if human.remove_health(.75):  # if return True (player is dead) then change to idle and kill player
-                # zombie.update_anim("IDLE")
-                human.kill()
 
 
 

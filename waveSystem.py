@@ -7,8 +7,6 @@ class Wave_System:
     Wave_Count = 0
     Wave_Timer = 0
 
-    #image = Shop_Gui()
-
     def __init__(self, window, zombie_group, player_cash):
         for i in range(5):
             zombie_group.add(Zombie(window, player_cash))
@@ -33,7 +31,8 @@ class Wave_System:
         screen.blit(pygame.font.Font(None, 40).render("or press [SPACE] to continue" , True, (255, 255, 255)), (370, 180))
 
         pygame.draw.rect(screen,(100, 100, 100), (300, 210, 500, 100))
-        pygame.draw.rect(screen, (100, 100, 100), (100, 100, 150, 150))
+        pygame.draw.rect(screen,(100, 255, 100), (300, 210, 500, 10))
+        screen.blit(pygame.font.Font(None, 40).render("   [AMMO]        [HEALTH]        [GUN]" , True, (255, 255, 255)), (300, 230))
 
         # Checks if player is pressing SPACE
         # if so, then timer is set to 0 and

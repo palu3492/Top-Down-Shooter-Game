@@ -1,56 +1,33 @@
 import pygame
 import math
 from Human import Human
+from waveSystem import  Wave_System
 #from CarePackage import PackageSystem
 from Data import *
 from Zombie import Zombie
 from loadBackground import loadBackground
 from Projectiles import *
-from Wall_items import *
-from Guns import *
-from Gun_Data import All_gun_stuff
+from PowerUps import PowerUps
 
 def reset_zombie_pos(zombie):
     zombie.reset_posistion()
 
-#human health effects
 def is_zombie_attacking(human, zombie):
     pygame.sprite.collide_rect_ratio(.5)
     if pygame.sprite.collide_rect(human, zombie):
         #zombie.update_anim("ATTACK")
-        if human.remove_health(.75): #if return True (player is dead) then change to idle and kill player
+        if human.remove_health(.10): #if return True (player is dead) then change to idle and kill player
             #zombie.update_anim("IDLE")
             human.kill()
 
-def explosion_touching_human(human, explotion):
-    if pygame.sprite.collide_rect(human, explotion):
-        if human.remove_health(50):
-            human.kill()
-
-def stun_explosion_touching_human(human, explotion):
-    if pygame.sprite.collide_rect(human, explotion):
-        human.remove_speed(10)
-
-def package_obtained(package, human):
-    if pygame.sprite.groupcollide(package, human, True, False):
-        pass
-
-#zombie hit by grenade
 def explosion_touching_zombie(zombie, explotion):
     if pygame.sprite.collide_rect(zombie, explotion):
         if zombie.remove_health(75):
             zombie.kill()
 
-
-def stun_explosion_touching_zombie(zombie, explosion):
-    if pygame.sprite.collide_rect(zombie, explosion):
+def stun_explosion_touching_zombie(zombie, explotion):
+    if pygame.sprite.collide_rect(zombie, explotion):
         zombie.remove_speed(3)
-
-def human_touching_item_on_wall(human,items_on_wall, screen,cameraX,cameraY):
-    for item in items_on_wall:
-        if pygame.sprite.collide_rect(human, item):
-            return item.press_to_buy(screen,cameraX,cameraY)
-
 
 def game_loop():
     pygame.init()
@@ -71,7 +48,7 @@ def game_loop():
     heads_up_display=HUD(window)
     human = Human(window)
     radar = RadarScrn()
-    player_cash=Cash()
+    player_cash = Cash()
     health_data = HealthBar(window)
     bullets = pygame.sprite.Group()
     grenades = pygame.sprite.Group()
@@ -81,27 +58,18 @@ def game_loop():
     all_grenade_data=grenade_data()
     human_group = pygame.sprite.Group(human)
     zombie_group = pygame.sprite.Group()
-    item1_on_wall = GunOnWall()
-    items_on_wall=pygame.sprite.Group()
+    powerups_group = pygame.sprite.Group()
+    powerups_group.add(PowerUps())
 
-
-    #ALL GUNS
-    gun_control=GunControl(window,screen)
-    gun_1 = Gun1(window)
+    wave_system = Wave_System(window, zombie_group, player_cash)
 
     mouseX = pygame.mouse.get_pos()[0]
     mouseY = pygame.mouse.get_pos()[1]
     centerX = int(mouseX - (window[0] / 2.0))
     centerY = -int((mouseY - (window[1] / 2.0)))
 
-    NUMBER_OF_ZOMBIES = 5
-    for i in range(NUMBER_OF_ZOMBIES):
-        zombie_group.add(Zombie(window, player_cash))
-
-    #ammo_class=gun_1_data(window)
-    press_key_x_type=""
-
-    items_on_wall.add(item1_on_wall)
+    ammo_class=gun_data(window)
+    ammoCount=""
 
     clock = pygame.time.Clock()
     while game_is_running:
@@ -119,40 +87,39 @@ def game_loop():
                 fullscreen_flag = True
 
         #Controls for moving the camera, moving 40 px per frame
-        human_speed=human.get_speed()
         if human.alive():
             if pressed[pygame.K_w]:
-                changeY = human_speed
+                changeY = 10
             elif pressed[pygame.K_s]:
-                changeY = -human_speed
+                changeY = -10
             if pressed[pygame.K_a]:
-                changeX = human_speed
+                changeX = 10
             elif pressed[pygame.K_d]:
-                changeX = -human_speed
+                changeX = -10
 
         cameraX += changeX
         cameraY += changeY
 
-        if cameraX>0+(window[0]/2.0):
-            cameraX=0+(window[0]/2.0)
-        elif cameraX < -5000+(window[0]/2.0):
-            cameraX=-5000+(window[0]/2.0)
-        if cameraY>0+(window[1]/2.0):
-            cameraY=0+(window[1]/2.0)
-        elif cameraY<-5000+(window[1]/2.0):
-            cameraY=-5000+(window[1]/2.0)
+        if cameraX>0:
+            cameraX=0
+        elif cameraX < -5000+window[0]:
+            cameraX=-5000+window[0]
+        if cameraY>0:
+            cameraY=0
+        elif cameraY<-5000+window[1]:
+            cameraY=-5000+window[1]
 
         #When button is lifted up sets camera x,y change to 0
         if changeX<=0 or changeY<=0:
             human_anim = "IDLE"
 
-        #human touching a item on the wall
-        press_key_x_type= human_touching_item_on_wall(human, items_on_wall, screen,cameraX,cameraY)
-
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                gun_control.shoot_gun(bullets,(window[0]/2.0)-cameraX, (window[1]/2.0)-cameraY, centerX, centerY)
-
+                if ammoCount!="no ammo" and ammoCount!="reload":
+                    human_anim = "SHOOT"
+                    bullet = Shot((window[0]/2.0)-cameraX, (window[1]/2.0)-cameraY, centerX, centerY)
+                    bullets.add(bullet)
+                    ammoCount = ammo_class.shooting_bullet()
             if event.type==pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -168,13 +135,10 @@ def game_loop():
                         stun_grenades.add(stun_grenade)
                         all_grenade_data.stun_grenade_amount-=1
                 if event.key == pygame.K_r:
-                    gun_control.reload_gun()
-                if event.key==pygame.K_x:
-                    if press_key_x_type=="shotgun":
-                        All_gun_stuff.buy_new_gun(player_cash,"shotgun")
-                if event.key==pygame.K_1:
-                    gun_control.change_gun_in_hand()
+                    ammoCount = ammo_class.manual_reload()
 
+        if ammoCount=="reload":
+            ammoCount=ammo_class.reloading(screen)
 
         # Quit the game
         if pressed[pygame.K_p]:
@@ -193,15 +157,13 @@ def game_loop():
         #Controls background rendering
         image = bck.image_at((0 - cameraX, 0 - cameraY, window[0], window[1]))
         screen.blit(image, (0, 0))
-        items_on_wall.update(cameraX,cameraY)
-        items_on_wall.draw(screen)
 
         # 1. Updates zombie animation
         # 1. Checks if Zombie is attacking
         # 2. Sends zombie to Human
         # 3. Moves Zombies when camera moves
         for zombie in zombie_group:
-            zombie.update_anim("MOVE")
+            #zombie.update_anim("MOVE")
             is_zombie_attacking(human, zombie)
             zombie.moveZombieTowardMid(cameraX,cameraY)
             zombie.health_bar(screen)
@@ -211,12 +173,6 @@ def game_loop():
                 stun_explosion_touching_zombie(zombie, stun_explosion)
             zombie.zombie_speed_timer() #check to see if zombie is stunnded and deduct time from stun time
 
-        #Human hit by stun or grenade
-        for explosion in explosions:
-            explosion_touching_human(human, explosion)
-        for stun_explosion in stun_explosions:
-            stun_explosion_touching_human(human, stun_explosion)
-        human.human_speed_timer()
 
 
         #Mouse Controls
@@ -227,6 +183,17 @@ def game_loop():
         rotationAngle = math.degrees(math.atan2(centerY, centerX))
         human.rot_center(rotationAngle)
 
+        ###################################
+        #
+        #           Updates PowerUps
+        #           Draws to screen
+        #
+        ###################################
+        for powerup in powerups_group:
+            if powerup.update(human, zombie_group, screen, changeX,changeY):
+                powerup.kill()
+        powerups_group.draw(screen)
+
         #Loads in Human and Zombie
         zombie_group.draw(screen)
         human_group.draw(screen)
@@ -234,6 +201,11 @@ def game_loop():
         #Bullet animation
         bullets.update(cameraX, cameraY,zombie_group)
         bullets.draw(screen)
+
+        if len(zombie_group) == 0:
+            controls_on = False
+            if wave_system.wave_gui(screen):
+                wave_system.wave_control(screen, window, zombie_group, player_cash)
 
         #Grenades and explosions
         grenades.update(cameraX, cameraY, screen, explosions)
@@ -250,21 +222,19 @@ def game_loop():
 
         #pygame.draw.rect(screen, (255, 255, 255), human.get_rect())
 
-        #Updating radar with new data, Human and Zombies
-        #radar.draw(screen, -cameraX+960, -cameraY+540)
-        # for zombie in zombie_group:
-        #     radar.update_zom(screen, zombie)
+        # Updating radar with new data, Human and Zombies
+        radar.draw(screen, -cameraX+960, -cameraY+540)
+        for zombie in zombie_group:
+            radar.update_zom(screen, zombie)
 
-        #update HUD
         heads_up_display.update(screen,window)
         #Updates Health Bar
         health_data.draw(screen, human.get_health())
-
-        #update ammo text and reload timer
-        gun_control.update_ammo_data()
-
-        #update cash amount
+        ammo_class.update(screen)
         player_cash.update(screen)
+
+        if ammoCount == "reload":
+            screen.blit(pygame.font.Font(None, 30).render("Reloading", True, (255, 255, 255)), ((window[0]/2.0)-50, 100))
 
         screen.blit(pygame.font.Font(None, 20).render(str(clock.get_fps()), True, (255, 255, 255)), (0, 0))
         pygame.display.flip()
