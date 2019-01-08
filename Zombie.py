@@ -10,14 +10,14 @@ class Zombie(pygame.sprite.Sprite):
     zombie_speed=6
     stun_timer=0
 
-    player = ("zombie_" + type + "/skeleton-" + type + "_" + str(0) + ".png")
+    player = "Assets/Zombie Animations/" + "zombie_" + type + "/skeleton-" + type + "_" + str(0) + ".png"
     zombie_health = 100.00
 
     def __init__(self, window_size, cash):
         self.player_cash = cash
         pygame.sprite.Sprite.__init__(self)
         self.window_size=window_size
-        self.image = pygame.image.load("zombie_idle/skeleton-idle_0.png").convert_alpha()
+        self.image = pygame.image.load("Assets/Zombie Animations/zombie_idle/skeleton-idle_0.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (int(120.5), int(111)))
         self.rect = self.image.get_rect()
         self.spawn_zombie() #calls function that controls Zombie Spawning
@@ -49,19 +49,19 @@ class Zombie(pygame.sprite.Sprite):
                 self.current_idle+=1
             else:
                 self.current_idle = 0
-            self.player = ("zombie_" + type + "/skeleton-" + type + "_" + str(self.current_idle) + ".png")
+            self.player = "Assets/Zombie Animations/" + "zombie_" + type + "/skeleton-" + type + "_" + str(self.current_idle) + ".png"
         elif type == "MOVE":
             if self.current_move < 16:
                 self.current_move += 1
             else:
                 self.current_move = 0
-            self.player = ("zombie_" + type + "/skeleton-" + type + "_" + str(self.current_move) + ".png")
+            self.player = "Assets/Zombie Animations/" + "zombie_" + type + "/skeleton-" + type + "_" + str(self.current_move) + ".png"
         elif type == "ATTACK":
             if self.current_attack < 8:
                 self.current_attack += 1
             else:
                 self.current_attack = 0
-            self.player = ("zombie_" + type + "/skeleton-" + type + "_" + str(self.current_attack) + ".png")
+            self.player = "Assets/Zombie Animations/" + "zombie_" + type + "/skeleton-" + type + "_" + str(self.current_attack) + ".png"
 
         self.image = pygame.image.load(self.player).convert_alpha()
         self.image = pygame.transform.scale(self.image, (int(self.image.get_rect().size[0] * .5),int(self.image.get_rect().size[1] * .5)))

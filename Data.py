@@ -39,8 +39,8 @@ class HealthBar:
 
 class HUD:
     def __init__(self, window):
-        self.images= [pygame.image.load("blHUD.png"), (40, window[1] - 76)],[pygame.image.load("brHUD.png"),
-                                (window[0] - 263, window[1] - 162)],[pygame.image.load("tmHUD.png"), ((window[0] / 2.0) - 225, 0)]
+        self.images= [pygame.image.load("Assets/HUD/blHUD.png"), (40, window[1] - 76)],[pygame.image.load("Assets/HUD/brHUD.png"),
+                                (window[0] - 263, window[1] - 162)],[pygame.image.load("Assets/HUD/tmHUD.png"), ((window[0] / 2.0) - 225, 0)]
 
 
     def update(self, screen, window):
@@ -53,7 +53,7 @@ class gun_data:
     reload_time=60
     def __init__(self,window):
         self.window=window
-        self.gun_type = pygame.image.load("gunShotty.png")
+        self.gun_type = pygame.image.load("Assets/HUD/gunShotty.png")
 
     def shooting_bullet(self):
         if self.clip_size >1:
@@ -138,7 +138,7 @@ class Shop_Gui(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.window_size=(1080, 720)
-        self.image = pygame.image.load("zombie_idle/skeleton-idle_0.png")
+        self.image = pygame.image.load("Assets/Zombie Animations/zombie_idle/skeleton-idle_0.png")
         self.image = pygame.transform.scale(self.image, (int(120.5), int(111)))
         self.rect = self.image.get_rect()
 

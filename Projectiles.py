@@ -2,9 +2,9 @@ import pygame
 import math
 
 pygame.mixer.init()
-gun_shot_sound = pygame.mixer.Sound('gunAudio.wav')
+gun_shot_sound = pygame.mixer.Sound('Assets/Sounds/gunAudio.wav')
 gun_shot_sound.set_volume(.01)
-explosion_sound = pygame.mixer.Sound('explosion.wav')
+explosion_sound = pygame.mixer.Sound('Assets/Sounds/explosion.wav')
 explosion_sound.set_volume(.01)
 
 class Shot(pygame.sprite.Sprite):
@@ -26,7 +26,7 @@ class Shot(pygame.sprite.Sprite):
         self.changeX = int(self.bullet_speed * self.smallChangeX)  # x change amount
         self.changeY = int(self.bullet_speed * self.smallChangeX)  # Y change amount
 
-        self.image = pygame.image.load("bullet.png").convert_alpha()
+        self.image = pygame.image.load("Assets/Projectiles/bullet.png").convert_alpha()
 
         self.rect = self.image.get_rect()
         self.bulletX = startX - (self.rect[0] / 2)
@@ -87,7 +87,7 @@ class Grenade(pygame.sprite.Sprite):
             self.changeX+=1
         if self.changeY == 0:
             self.changeY+=1
-        self.image = pygame.image.load("grenade.png").convert_alpha()
+        self.image = pygame.image.load("Assets/Throwables/grenade.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.grenadeX = startX - (self.rect[0]*1.0 / 2.0) #-half of grenade size
         self.grenadeY = startY - (self.rect[1]*1.0 / 2.0)
@@ -130,7 +130,7 @@ class grenadeDetonate(pygame.sprite.Sprite):
     counter=1
     def __init__(self,startX,startY):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("explosion.png").convert_alpha()
+        self.image = pygame.image.load("Assets/Effects/explosion.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.explosionX = startX - (self.rect.size[0] / 2) #-half of explosion size
         self.explosionY = startY - (self.rect.size[1] / 2)
@@ -164,7 +164,7 @@ class stunGrenade(pygame.sprite.Sprite):
             self.changeX+=1
         if self.changeY == 0:
             self.changeY+=1
-        self.image = pygame.image.load("stungrenade.png").convert_alpha()
+        self.image = pygame.image.load("Assets/Throwables/stungrenade.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.grenadeX = startX - (self.rect[0]*1.0 / 2.0) #-half of grenade size
         self.grenadeY = startY - (self.rect[1]*1.0 / 2.0)
@@ -205,7 +205,7 @@ class stunDetonate(pygame.sprite.Sprite):
     counter=1
     def __init__(self,startX,startY):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("stunexplosion.png").convert_alpha()
+        self.image = pygame.image.load("Assets/Effects/stunexplosion.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.explosionX = startX - (self.rect.size[0] / 2) #-half of explosion size
         self.explosionY = startY - (self.rect.size[1] / 2)

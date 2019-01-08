@@ -11,11 +11,11 @@ class Human(pygame.sprite.Sprite):
 
     health = 100.00
 
-    player = (type + "/survivor-" + type + "_rifle_" + str(0) + ".png")
+    player = "Assets/Player Animations/" + type + "/survivor-" + type + "_rifle_" + str(0) + ".png"
 
     def __init__(self, window_size):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load("idle/survivor-idle_rifle_0.png")
+       self.image = pygame.image.load("Assets/Player Animations/Idle/survivor-idle_rifle_0.png")
        self.image = pygame.transform.scale(self.image, (int(self.image.get_rect().size[0] * .5),int(self.image.get_rect().size[1] * .5)))
        self.rect = self.image.get_rect()
        self.rect.x = (window_size[0] / 2.0) - (self.rect.size[0] / 2.0)
@@ -41,19 +41,19 @@ class Human(pygame.sprite.Sprite):
                 self.current_idle+=1
             else:
                 self.current_idle = 0
-            self.player = (type + "/survivor-" + type + "_rifle_" + "0" + ".png")
+            self.player = "Assets/Player Animations/" + type + "/survivor-" + type + "_rifle_" + "0" + ".png"
         elif type == "MOVE":
             if self.current_move < 19:
                 self.current_move += 1
             else:
                 self.current_move = 0
-            self.player = (type + "/survivor-" + type + "_rifle_" + str(self.current_move) + ".png")
+            self.player = "Assets/Player Animations/" + type + "/survivor-" + type + "_rifle_" + str(self.current_move) + ".png"
         elif type == "SHOOT":
             if self.current_shoot < 2:
                 self.current_shoot += 1
             else:
                 self.current_shoot = 0
-            self.player = (type + "/survivor-" + type + "_rifle_" + str(self.current_shoot) + ".png")
+            self.player = "Assets/Player Animations/" + type + "/survivor-" + type + "_rifle_" + str(self.current_shoot) + ".png"
 
         self.image = pygame.image.load(self.player)
         self.image = pygame.transform.scale(self.image, (int(self.image.get_rect().size[0] * .5),int(self.image.get_rect().size[1] * .5)))

@@ -38,12 +38,12 @@ def game_loop():
     game_is_running = True
     fullscreen_flag = True
 
-    cursor = pygame.image.load('cursor.png')
+    cursor = pygame.image.load('Assets/cursor.png')
     pygame.mouse.set_visible(False)
 
     cameraX, cameraY = 0,0
 
-    bck = loadBackground("background_0.jpg")
+    bck = loadBackground("Assets/Backgrounds/background_0.jpg")
 
     heads_up_display=HUD(window)
     human = Human(window)
